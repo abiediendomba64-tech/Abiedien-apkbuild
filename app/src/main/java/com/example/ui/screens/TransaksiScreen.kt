@@ -287,7 +287,7 @@ fun TransaksiScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Text(
-                                    text = "Approver: ${tx.disetujuiOleh1}",
+                                    text = if (tx.disetujuiOleh1.isNotBlank()) "Approver: ${tx.disetujuiOleh1}" else "Approver: ditentukan server dari akun terautentikasi",
                                     style = MaterialTheme.typography.bodySmall,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -299,6 +299,25 @@ fun TransaksiScreen(
                                     style = MaterialTheme.typography.labelSmall,
                                     color = StatusRed
                                 )
+                            }
+
+                            if (tx.statusSistem == "PENDING_APPROVAL") {
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Button(
+                                    onClick = { viewModel.approveTransaction(tx.id) },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(40.dp),
+                                    colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Verified,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                    Spacer(modifier = Modifier.width(6.dp))
+                                    Text("Approve dengan akun saya")
+                                }
                             }
 
                             // Reversal Action for POSTED transactions
