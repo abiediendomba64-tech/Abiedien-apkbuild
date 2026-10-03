@@ -32,14 +32,14 @@ fun PajakScreen(
     val taxFilings by viewModel.allTaxFilings.collectAsStateWithLifecycle()
 
     var selectedTab by remember { mutableStateOf(0) } // 0: Kalkulator Pajak, 1: Laporan SPT & Setor Pajak
-    var simulasiHargaText by remember { mutableStateOf("") }
+    var hargaRumahText by remember { mutableStateOf("") }
     var selectedPersenDtp by remember { mutableStateOf(100.0) }
     var showAddTaxDialog by remember { mutableStateOf(false) }
 
-    val hargaSimulasi = simulasiHargaText.toLongOrNull() ?: 0L
-    val pphFinal = TaxEngine.hitungPphFinalPengalihan(hargaSimulasi)
-    val bphtb = TaxEngine.hitungBphtb(hargaSimulasi)
-    val ppnDtpResult = TaxEngine.hitungPpnDtp(hargaSimulasi, selectedPersenDtp)
+    val hargaRumah = hargaRumahText.toLongOrNull() ?: 0L
+    val pphFinal = TaxEngine.hitungPphFinalPengalihan(hargaRumah)
+    val bphtb = TaxEngine.hitungBphtb(hargaRumah)
+    val ppnDtpResult = TaxEngine.hitungPpnDtp(hargaRumah, selectedPersenDtp)
 
     Column(
         modifier = modifier
@@ -111,8 +111,8 @@ fun PajakScreen(
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
-                                value = simulasiHargaText,
-                                onValueChange = { simulasiHargaText = it.filter { ch -> ch.isDigit() } },
+                                value = hargaRumahText,
+                                onValueChange = { hargaRumahText = it.filter { ch -> ch.isDigit() } },
                                 label = { Text("Harga Rumah Transaksi (Rp)") },
                                 modifier = Modifier.fillMaxWidth()
                             )
