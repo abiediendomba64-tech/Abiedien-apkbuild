@@ -363,11 +363,6 @@ fun TransaksiScreen(
         var selectedPihakId by remember { mutableStateOf(pihakList.firstOrNull()?.id ?: "") }
         var docRef by remember { mutableStateOf("") }
 
-        var disetujuiOleh1 by remember { mutableStateOf(userList.firstOrNull { it.pangkat >= 2 }?.nama ?: "H. Bambang Nugraha") }
-        var disetujuiOleh2 by remember { mutableStateOf("") }
-        var hasUploadedPhotoProof by remember { mutableStateOf(false) }
-        var hasSignedProof by remember { mutableStateOf(false) }
-        var photoProofUri by remember { mutableStateOf("") }
         var volumeText by remember { mutableStateOf("1") }
         var satuanText by remember { mutableStateOf("Lot") }
         var priceAuditResult by remember { mutableStateOf<PriceResearchAnalysis?>(null) }
@@ -726,7 +721,7 @@ fun TransaksiScreen(
                             costCode = if (actualType == "KELUAR" && tipeTransaksiKhusus == "BELANJA_RAB") selectedCostCode else "",
                             akunEfektif = effectiveAccount,
                             pihakId = selectedPihakId,
-                            pihakNama = pihakMatch?.nama ?: "Vendor / Mitra / Investor",
+                            pihakNama = pihakMatch?.nama ?: "",
                             nominal = nominal,
                             keterangan = actualKeterangan,
                             docRef = docRef,
@@ -873,7 +868,7 @@ fun TransaksiScreen(
     if (showImportDialog) {
         AlertDialog(
             onDismissRequest = { showImportDialog = false },
-            title = { Text("Impor / Migrasi Data Transaksi (CONTROL)", fontWeight = FontWeight.Bold) },
+            title = { Text("Impor / Migrasi Data Transaksi (Supabase)", fontWeight = FontWeight.Bold) },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
