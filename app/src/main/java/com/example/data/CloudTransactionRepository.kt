@@ -88,6 +88,21 @@ class CloudTransactionRepository {
         return toEntity(dto)
     }
 
+    suspend fun reverseTransaction(
+        transactionId: String,
+        reason: String
+    ): TransaksiKasBankRecord {
+        val dto = supabase.postgrest.rpc(
+            "reverse_transaction",
+            kotlinx.serialization.json.buildJsonObject {
+                put("p_transaction_id", transactionId)
+                put("p_reason", reason)
+            }
+        ).decodeSingle<CloudTransactionDto>()
+
+        return toEntity(dto)
+    }
+
     private fun toEntity(dto: CloudTransactionDto): TransaksiKasBankRecord {
         return TransaksiKasBankRecord(
             id = dto.id,
