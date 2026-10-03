@@ -950,20 +950,9 @@ fun TransaksiScreen(
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(
-                        text = "Tempel data CSV transaksi dari spreadsheet atau kontrol GitHub (https://github.com/barubayu001-ux/CONTROL):",
+                        text = "Tempel data CSV transaksi dari sumber data nyata yang telah diverifikasi. Sistem akan memvalidasi sebelum posting:",
                         style = MaterialTheme.typography.bodySmall
                     )
-                    OutlinedButton(
-                        onClick = {
-                            val sample = "ID Transaksi,Tanggal,Tipe,Rekening Bank,ID Proyek,Cost Code,Akun COA,Pihak/Vendor,Nominal,Keterangan,Dokumen Ref,Dibuat Oleh,Approver 1,Approver 2,Status Sistem\n" +
-                                    "TX-20261003-90001,2026-10-03,KELUAR,BCA Operasional,PRJ-001,INF-001,1410,PT Beton Pratama,85000000,Pengecoran Jalan Utama Kavling A,PPB-9001,Operator,H. Bambang Nugraha,,POSTED"
-                            importCsvText = sample
-                        },
-                        modifier = Modifier.fillMaxWidth().height(32.dp),
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Text("Isi Contoh Data CONTROL", fontSize = 11.sp)
-                    }
                     OutlinedTextField(
                         value = importCsvText,
                         onValueChange = { importCsvText = it },

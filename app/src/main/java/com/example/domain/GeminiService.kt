@@ -35,8 +35,9 @@ class GeminiService {
     ): Result<String> = withContext(Dispatchers.IO) {
         try {
             if (apiKey.isBlank() || apiKey == "MY_GEMINI_API_KEY") {
-                // Fallback to rich built-in knowledge response
-                return@withContext Result.success(getFallbackResponse(prompt))
+                return@withContext Result.failure(
+                    IllegalStateException("Gemini AI tidak tersedia: API key belum dikonfigurasi.")
+                )
             }
 
             val url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key=$apiKey"
@@ -68,7 +69,9 @@ class GeminiService {
 
             client.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) {
-                    return@withContext Result.success(getFallbackResponse(prompt))
+                    return@withContext Result.failure(
+                        IllegalStateException("Gemini API gagal (HTTP " + response.code + "): " + response.message)
+                    )
                 }
                 val responseBody = response.body?.string() ?: ""
                 val json = JSONObject(responseBody)
@@ -79,11 +82,11 @@ class GeminiService {
                     val text = parts?.getJSONObject(0)?.optString("text") ?: ""
                     Result.success(text)
                 } else {
-                    Result.success(getFallbackResponse(prompt))
+                    Result.failure(IllegalStateException("Gemini API mengembalikan respons tanpa kandidat jawaban."))
                 }
             }
         } catch (e: Exception) {
-            Result.success(getFallbackResponse(prompt))
+            Result.failure(e)
         }
     }
 
@@ -271,36 +274,4 @@ class GeminiService {
         return@withContext baseReport
     }
 
-    private fun getFallbackResponse(query: String): String {
-        val q = query.lowercase()
-        return when {
-            "wip" in q || "kapitalisasi" in q || "aset" in q -> {
-                "💡 **Penjelasan Logika Akuntansi SAK EP (Bahasa Awam):**\n\n" +
-                "Pengeluaran pembangunan rumah (semen, pasir, upah tukang fisik) **TIDAK langsung diakui sebagai Beban/Rugi**, melainkan dicatat sebagai **WIP (Work In Progress / Pekerjaan Dalam Proses - Akun 1410)** yang merupakan ASET LANCAR.\n\n" +
-                "WIP ini nantinya akan berubah menjadi **Persediaan Rumah Siap Huni (Akun 1510)** ketika fisik 100% jadi, dan baru menjadi **HPP (Harga Pokok Penjualan - Akun 5100)** saat unit diserahterimakan (BAST) kepada pembeli."
-            }
-            "intercompany" in q || "anak" in q || "induk" in q -> {
-                "🏢 **Aturan Intercompany (Induk vs Anak PT):**\n\n" +
-                "Dana yang ditransfer dari PT Gema Abadi Nugraha (Induk) ke PT Setia Surya Nugraha (Anak) **BUKAN BEBAN** dan **BUKAN PENDAPATAN**.\n\n" +
-                "- **PT Induk mencatat:** Dr 1230 Piutang Intercompany / Cr 1110 Bank\n" +
-                "- **PT Anak mencatat:** Dr Aset/WIP / Cr 2430 Hutang Intercompany\n" +
-                "- Saat dana dikembalikan (Settlement): Hanya pemulihan kas (Dr Bank / Cr 1230), tidak boleh diakui sebagai laba usaha!"
-            }
-            "petty cash" in q || "kas kecil" in q -> {
-                "💰 **Aturan Kontrol Kas Kecil (Petty Cash):**\n\n" +
-                "1. Kas kecil dicairkan dengan akun 1320 (Uang Muka Operasional).\n" +
-                "2. Setiap pengeluaran wajib disertai nomor nota fisik dan diverifikasi.\n" +
-                "3. **KONTROL KUNCI:** Staf yang masih memiliki advance berstatus OPEN/OVERDUE tidak boleh diberikan advance baru (LOCKED) sampai advance sebelumnya diselesaikan (SETTLED)."
-            }
-            "pajak" in q || "pph" in q || "ppn" in q -> {
-                "🏛️ **Kepatuhan Pajak Developer Properti:**\n\n" +
-                "- **PPh Final Pasal 4(2):** 2,5% dari nilai bruto penjualan/pengalihan hak tanah & bangunan (bersifat final, dibayar sebelum AJB).\n" +
-                "- **PPN Properti:** 11% (tersedia fasilitas PPN DTP 100% atau 50% untuk rumah tapak harga s/d Rp 2 Miliar).\n" +
-                "- **BPHTB:** 5% x (Nilai Transaksi - NPOPTKP) menjadi tanggungan pembeli."
-            }
-            else -> {
-                "Sistem Pembukuan Developer Properti SAK EP memisahkan arus kas riil dari pengakuan laba/rugi. Pastikan setiap transaksi memiliki Cost Code yang sah, disetujui sesuai matriks kepangkatan, dan didukung bukti dokumen fisik resmi di Dokumen Registry."
-            }
-        }
-    }
 }

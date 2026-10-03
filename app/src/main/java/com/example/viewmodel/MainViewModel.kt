@@ -210,11 +210,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         AuditChecker.evaluate(tx, ang, rev, ic, pc, lh, kt, pb, us, pr, pt, jr)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    init {
-        viewModelScope.launch {
-            repository.seedInitialDataIfNeeded()
-        }
-    }
 
     fun navigateTo(screen: Screen) {
         if (currentScreen.value != screen) {

@@ -1,9 +1,8 @@
 package com.example.ui.screens
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color as AndroidColor
-import android.graphics.Paint
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -45,11 +44,19 @@ fun AiAdvisorScreen(
     var selectedTab by remember { mutableStateOf(0) } // 0: Riset Harga & Alarm, 1: Tanya AI & Scan, 2: Kop & Cap Resmi
 
     // Price Research Audit State
-    var itemNameInput by remember { mutableStateOf("Semen PCC 50kg") }
-    var volumeInput by remember { mutableStateOf("100") }
-    var satuanInput by remember { mutableStateOf("Sak") }
-    var nominalInput by remember { mutableStateOf("6500000") }
-    var selectedCostCode by remember { mutableStateOf("BLD-001") }
+    var itemNameInput by remember { mutableStateOf("") }
+    var volumeInput by remember { mutableStateOf("") }
+    var satuanInput by remember { mutableStateOf("") }
+    var nominalInput by remember { mutableStateOf("") }
+    var selectedCostCode by remember { mutableStateOf("") }
+
+    val cameraLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.TakePicturePreview()
+    ) { bitmap ->
+        if (bitmap != null) {
+            viewModel.analyzeReceipt(bitmap)
+        }
+    }
 
     // Chat input
     var inputQuery by remember { mutableStateOf("") }
@@ -203,55 +210,6 @@ fun AiAdvisorScreen(
                                 )
                             }
 
-                            // Preset Quick Test Buttons
-                            Text("Preset Uji Coba Cepat Pasar:", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(6.dp)
-                            ) {
-                                Button(
-                                    onClick = {
-                                        itemNameInput = "Semen PCC 50kg"
-                                        volumeInput = "100"
-                                        satuanInput = "Sak"
-                                        nominalInput = "6500000" // Rp 65.000 / sak (Wajar)
-                                        viewModel.performAiPriceAudit("Semen PCC 50kg", 6500000, 100.0, "BLD-001", "Sak")
-                                    },
-                                    modifier = Modifier.weight(1f),
-                                    colors = ButtonDefaults.buttonColors(containerColor = StatusGreen)
-                                ) {
-                                    Text("Semen Wajar", fontSize = 10.sp)
-                                }
-
-                                Button(
-                                    onClick = {
-                                        itemNameInput = "Semen PCC 50kg"
-                                        volumeInput = "100"
-                                        satuanInput = "Sak"
-                                        nominalInput = "11500000" // Rp 115.000 / sak (ALARM MARKUP!)
-                                        viewModel.performAiPriceAudit("Semen PCC 50kg", 11500000, 100.0, "BLD-001", "Sak")
-                                    },
-                                    modifier = Modifier.weight(1f),
-                                    colors = ButtonDefaults.buttonColors(containerColor = StatusRed)
-                                ) {
-                                    Text("Semen Alarm!", fontSize = 10.sp)
-                                }
-
-                                Button(
-                                    onClick = {
-                                        itemNameInput = "Besi Beton Ulir D13"
-                                        volumeInput = "50"
-                                        satuanInput = "Batang"
-                                        nominalInput = "9500000" // Rp 190.000 / batang (ALARM MARKUP!)
-                                        viewModel.performAiPriceAudit("Besi Beton Ulir D13", 9500000, 50.0, "BLD-001", "Batang")
-                                    },
-                                    modifier = Modifier.weight(1f),
-                                    colors = ButtonDefaults.buttonColors(containerColor = StatusRed)
-                                ) {
-                                    Text("Besi Alarm!", fontSize = 10.sp)
-                                }
-                            }
-
                             // Trigger Analysis Button
                             Button(
                                 onClick = {
@@ -275,7 +233,7 @@ fun AiAdvisorScreen(
                                 } else {
                                     Icon(Icons.Default.TravelExplore, contentDescription = null, modifier = Modifier.size(18.dp), tint = AccentGoldLight)
                                     Spacer(modifier = Modifier.width(6.dp))
-                                    Text("Jalankan Riset AI & Deteksi Alarm", fontWeight = FontWeight.Bold)
+                                    Text("Jalankan Audit Harga & Deteksi Alarm", fontWeight = FontWeight.Bold)
                                 }
                             }
                         }
@@ -399,21 +357,7 @@ fun AiAdvisorScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     IconButton(
-                        onClick = {
-                            val sampleReceipt = Bitmap.createBitmap(400, 300, Bitmap.Config.ARGB_8888).apply {
-                                val canvas = Canvas(this)
-                                canvas.drawColor(AndroidColor.WHITE)
-                                val paint = Paint().apply {
-                                    color = AndroidColor.BLACK
-                                    textSize = 20f
-                                }
-                                canvas.drawText("KWITANSI MATERIAL", 20f, 40f, paint)
-                                canvas.drawText("Toko Bangunan Sumber Berkah", 20f, 80f, paint)
-                                canvas.drawText("Besi Beton 10mm & Semen", 20f, 120f, paint)
-                                canvas.drawText("Rp 4.500.000,-", 20f, 160f, paint)
-                            }
-                            viewModel.analyzeReceipt(sampleReceipt)
-                        },
+                        onClick = { cameraLauncher.launch(null) },
                         modifier = Modifier.testTag("btn_scan_receipt_camera")
                     ) {
                         Icon(Icons.Default.CameraAlt, contentDescription = "Scan Nota", tint = NavyPrimary)

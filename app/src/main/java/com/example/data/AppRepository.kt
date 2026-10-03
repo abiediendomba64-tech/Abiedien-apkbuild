@@ -30,56 +30,6 @@ class AppRepository(private val dao: AppDao) {
     val allTaxFilings: Flow<List<TaxFilingRecord>> = dao.getAllTaxFilings()
     val allInvestors: Flow<List<MitraInvestorRecord>> = dao.getAllInvestor()
 
-    suspend fun seedInitialDataIfNeeded() {
-        val currentPT = dao.getAllPT().first()
-        if (currentPT.isEmpty()) {
-            dao.insertPT(DataSeeder.getInitialPT())
-            dao.insertProyek(DataSeeder.getInitialProyek())
-            dao.insertLahan(DataSeeder.getInitialLahan())
-            dao.insertUnit(DataSeeder.getInitialUnits())
-            dao.insertPihak(DataSeeder.getInitialPihak())
-            dao.insertCOA(DataSeeder.getInitialCOA())
-            dao.insertCostCode(DataSeeder.getInitialCostCode())
-            dao.insertAnggaran(DataSeeder.getInitialAnggaran())
-            dao.insertUsers(DataSeeder.getInitialUsers())
-            dao.insertPayroll(DataSeeder.getInitialPayroll())
-            dao.insertAttendanceList(DataSeeder.getInitialAttendance())
-            dao.insertTaxFilingList(DataSeeder.getInitialTaxFilings())
-            dao.insertInvestorList(DataSeeder.getInitialInvestors())
-            dao.insertDokumenList(DataSeeder.getInitialDokumen())
-            dao.insertTransaksiList(DataSeeder.getInitialTransaksi())
-            dao.insertKontrak(DataSeeder.getInitialKontrak()[0])
-            dao.insertKontrak(DataSeeder.getInitialKontrak()[1])
-            dao.insertKontraktor(DataSeeder.getInitialKontraktor())
-            dao.insertIntercompany(DataSeeder.getInitialIntercompany()[0])
-            dao.insertPettyCashAdvance(DataSeeder.getInitialPettyCash()[0])
-            dao.insertAuditLog(
-                AuditLog(
-                    user = "SYSTEM",
-                    action = "INITIAL_SEED",
-                    entityId = "PT-001",
-                    projectId = "PRJ-001",
-                    recordId = "INIT",
-                    details = "Inisialisasi Master Data & Baseline Hardened Ledger Real Estate Developer SAK EP"
-                )
-            )
-        } else {
-            // Check if attendance, tax filings, or investors need seeding
-            val att = dao.getAllAttendance().first()
-            if (att.isEmpty()) {
-                dao.insertAttendanceList(DataSeeder.getInitialAttendance())
-            }
-            val tax = dao.getAllTaxFilings().first()
-            if (tax.isEmpty()) {
-                dao.insertTaxFilingList(DataSeeder.getInitialTaxFilings())
-            }
-            val inv = dao.getAllInvestor().first()
-            if (inv.isEmpty()) {
-                dao.insertInvestorList(DataSeeder.getInitialInvestors())
-            }
-        }
-    }
-
     suspend fun insertUnit(unit: MasterUnit) = dao.insertSingleUnit(unit)
     suspend fun updateUnit(unit: MasterUnit) = dao.updateUnit(unit)
     suspend fun insertInvestor(investor: MitraInvestorRecord) = dao.insertInvestor(investor)

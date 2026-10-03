@@ -32,7 +32,7 @@ fun PajakScreen(
     val taxFilings by viewModel.allTaxFilings.collectAsStateWithLifecycle()
 
     var selectedTab by remember { mutableStateOf(0) } // 0: Kalkulator Pajak, 1: Laporan SPT & Setor Pajak
-    var simulasiHargaText by remember { mutableStateOf("450000000") }
+    var simulasiHargaText by remember { mutableStateOf("") }
     var selectedPersenDtp by remember { mutableStateOf(100.0) }
     var showAddTaxDialog by remember { mutableStateOf(false) }
 
@@ -105,7 +105,7 @@ fun PajakScreen(
                     ) {
                         Column(modifier = Modifier.padding(16.dp)) {
                             Text(
-                                text = "Simulasi Pajak Unit Rumah",
+                                text = "Kalkulator Pajak Unit Rumah",
                                 style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.Bold),
                                 color = NavyPrimary
                             )
