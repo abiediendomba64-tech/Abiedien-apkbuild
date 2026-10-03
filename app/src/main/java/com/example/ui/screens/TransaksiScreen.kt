@@ -354,15 +354,15 @@ fun TransaksiScreen(
         var kategoriEntitas by remember { mutableStateOf("PT_INDUK") }
         var tipeTransaksiKhusus by remember { mutableStateOf("BELANJA_RAB") }
         var persentaseKomisiText by remember { mutableStateOf("0") }
-        var selectedRekeningTujuan by remember { mutableStateOf("BCA Proyek") }
+        var selectedRekeningTujuan by remember { mutableStateOf("") }
         var nominalText by remember { mutableStateOf("") }
         var keterangan by remember { mutableStateOf("") }
-        var selectedRekening by remember { mutableStateOf("BCA Operasional") }
-        var selectedProjectId by remember { mutableStateOf(proyekList.firstOrNull()?.id ?: "PRJ-001") }
-        var selectedCostCode by remember { mutableStateOf(costCodeList.firstOrNull()?.kode ?: "BLD-001") }
-        var selectedPihakId by remember { mutableStateOf(pihakList.firstOrNull()?.id ?: "PHK-001") }
-        var docRef by remember { mutableStateOf("INV-${System.currentTimeMillis() % 10000}") }
-        var dibuatOleh by remember { mutableStateOf("Operator") }
+        var selectedRekening by remember { mutableStateOf("") }
+        var selectedProjectId by remember { mutableStateOf(proyekList.firstOrNull()?.id ?: "") }
+        var selectedCostCode by remember { mutableStateOf(costCodeList.firstOrNull()?.kode ?: "") }
+        var selectedPihakId by remember { mutableStateOf(pihakList.firstOrNull()?.id ?: "") }
+        var docRef by remember { mutableStateOf("") }
+
         var disetujuiOleh1 by remember { mutableStateOf(userList.firstOrNull { it.pangkat >= 2 }?.nama ?: "H. Bambang Nugraha") }
         var disetujuiOleh2 by remember { mutableStateOf("") }
         var hasUploadedPhotoProof by remember { mutableStateOf(false) }
