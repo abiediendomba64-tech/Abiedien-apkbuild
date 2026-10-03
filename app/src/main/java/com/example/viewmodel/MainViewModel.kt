@@ -235,13 +235,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val remote = cloudTransactionRepository.fetchTransactions()
+                db.appDao().clearAllTransaksi()
                 if (remote.isNotEmpty()) {
-                    db.appDao().clearAllTransaksi()
                     db.appDao().insertTransaksiList(remote)
                 }
                 userFeedbackMessage.value = "Data Buku Kas/Bank diperbarui dari Supabase (" + remote.size + " transaksi)."
                 isErrorMessage.value = false
             } catch (e: Throwable) {
+                db.appDao().clearAllTransaksi()
                 userFeedbackMessage.value = "Gagal memuat Buku Kas/Bank dari Supabase: " + (e.message ?: "unknown error")
                 isErrorMessage.value = true
             }
