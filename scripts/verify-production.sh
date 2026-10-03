@@ -8,6 +8,9 @@ forbidden_patterns=(
   'Simulasi Analisis'
   'Isi Contoh Data CONTROL'
   'fallbackToDestructiveMigration'
+  'content://media/photos/bukti_'
+  'disetujuiOleh2 = "Drs. H. Surya Abadi"'
+  'dibuatOleh = "Operator"'
 )
 
 failed=0
