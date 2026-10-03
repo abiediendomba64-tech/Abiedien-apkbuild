@@ -44,6 +44,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val db = AppDatabase.getDatabase(application)
     private val repository = AppRepository(db.appDao())
+    private val cloudTransactionRepository = CloudTransactionRepository()
     private val geminiService = GeminiService()
 
     val currentScreen = MutableStateFlow<Screen>(Screen.Dashboard)
@@ -230,14 +231,50 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun refreshTransactionsFromCloud() {
+        viewModelScope.launch {
+            try {
+                val remote = cloudTransactionRepository.fetchTransactions()
+                if (remote.isNotEmpty()) {
+                    db.appDao().clearAllTransaksi()
+                    db.appDao().insertTransaksiList(remote)
+                }
+                userFeedbackMessage.value = "Data Buku Kas/Bank diperbarui dari Supabase (" + remote.size + " transaksi)."
+                isErrorMessage.value = false
+            } catch (e: Throwable) {
+                userFeedbackMessage.value = "Gagal memuat Buku Kas/Bank dari Supabase: " + (e.message ?: "unknown error")
+                isErrorMessage.value = true
+            }
+        }
+    }
+
     fun submitTransaksi(tx: TransaksiKasBankRecord) {
         viewModelScope.launch {
-            val result = repository.submitAndPostTransaksi(tx)
-            result.onSuccess {
-                userFeedbackMessage.value = "Transaksi ${it.id} berhasil diverifikasi dan diposting (POSTED)!"
+            try {
+                val remote = cloudTransactionRepository.postTransaction(tx)
+                db.appDao().insertTransaksi(remote)
+                userFeedbackMessage.value = "Transaksi " + remote.id + " tersimpan di Supabase dan menunggu approval."
                 isErrorMessage.value = false
-            }.onFailure {
-                userFeedbackMessage.value = it.message ?: "Gagal memposting transaksi."
+            } catch (e: Throwable) {
+                userFeedbackMessage.value = e.message ?: "Gagal menyimpan transaksi ke Supabase."
+                isErrorMessage.value = true
+            }
+        }
+    }
+
+    fun approveTransaction(transactionId: String) {
+        viewModelScope.launch {
+            try {
+                val remote = cloudTransactionRepository.approveTransaction(transactionId)
+                db.appDao().insertTransaksi(remote)
+                userFeedbackMessage.value = if (remote.statusSistem == "POSTED") {
+                    "Transaksi " + remote.id + " berhasil POSTED oleh user terautentikasi."
+                } else {
+                    "Approval tahap 1 transaksi " + remote.id + " tersimpan; menunggu approval berikutnya."
+                }
+                isErrorMessage.value = false
+            } catch (e: Throwable) {
+                userFeedbackMessage.value = e.message ?: "Approval transaksi gagal."
                 isErrorMessage.value = true
             }
         }
@@ -245,12 +282,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun createReversal(originalTxId: String, reason: String, performedBy: String) {
         viewModelScope.launch {
-            val result = repository.createReversal(originalTxId, reason, performedBy)
-            result.onSuccess {
-                userFeedbackMessage.value = "Reversal ${it.id} berhasil! Transaksi asli telah dinetralkan."
+            try {
+                val remote = cloudTransactionRepository.reverseTransaction(originalTxId, reason)
+                db.appDao().insertTransaksi(remote)
+                userFeedbackMessage.value = "Reversal " + remote.id + " tersimpan di Supabase dan transaksi asli dinetralkan."
                 isErrorMessage.value = false
-            }.onFailure {
-                userFeedbackMessage.value = it.message ?: "Gagal melakukan reversal."
+            } catch (e: Throwable) {
+                userFeedbackMessage.value = e.message ?: "Reversal gagal."
                 isErrorMessage.value = true
             }
         }
