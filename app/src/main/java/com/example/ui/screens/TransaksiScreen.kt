@@ -40,7 +40,6 @@ fun TransaksiScreen(
     val proyekList by viewModel.allProyek.collectAsStateWithLifecycle()
     val costCodeList by viewModel.allCostCode.collectAsStateWithLifecycle()
     val pihakList by viewModel.allPihak.collectAsStateWithLifecycle()
-    val userList by viewModel.activeUsers.collectAsStateWithLifecycle()
     val anggaranList by viewModel.allAnggaran.collectAsStateWithLifecycle()
 
     var showCreateDialog by remember { mutableStateOf(false) }
@@ -55,6 +54,7 @@ fun TransaksiScreen(
 
     val filteredList = when (filterTab) {
         "POSTED" -> transaksiList.filter { it.statusSistem == "POSTED" }
+        "PENDING_APPROVAL" -> transaksiList.filter { it.statusSistem == "PENDING_APPROVAL" }
         "REVERSED" -> transaksiList.filter { it.statusSistem == "REVERSED" }
         "MASUK" -> transaksiList.filter { it.tipe == "MASUK" }
         "KELUAR" -> transaksiList.filter { it.tipe == "KELUAR" }
@@ -109,7 +109,7 @@ fun TransaksiScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                listOf("SEMUA", "POSTED", "MASUK", "KELUAR", "REVERSED").forEach { tab ->
+                listOf("SEMUA", "PENDING_APPROVAL", "POSTED", "MASUK", "KELUAR", "REVERSED").forEach { tab ->
                     FilterChip(
                         selected = filterTab == tab,
                         onClick = { filterTab = tab },
@@ -137,7 +137,7 @@ fun TransaksiScreen(
                         color = NavyPrimary
                     )
                     Text(
-                        text = "Sync: github.com/barubayu001-ux/CONTROL",
+                        text = "Sumber data: Supabase • Room = cache lokal",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -648,66 +648,6 @@ fun TransaksiScreen(
                         )
                     }
 
-                    if (txType == "KELUAR") {
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(10.dp),
-                                colors = CardDefaults.cardColors(
-                                    containerColor = if (hasUploadedPhotoProof && hasSignedProof) StatusGreenLight else StatusYellowLight
-                                )
-                            ) {
-                                Column(modifier = Modifier.padding(10.dp)) {
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.SpaceBetween,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        Text(
-                                            text = "Bukti Tertanda Tangan & Foto Fisik (Wajib):",
-                                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = FontWeight.Bold),
-                                            color = if (hasUploadedPhotoProof && hasSignedProof) StatusGreen else StatusYellow
-                                        )
-                                        StatusBadge(status = if (hasUploadedPhotoProof && hasSignedProof) "LENGKAP" else "BELUM LENGKAP")
-                                    }
-                                    Spacer(modifier = Modifier.height(4.dp))
-                                    Text(
-                                        text = "Sebelum uang kas/bank dicairkan, wajib melampirkan foto dokumen fisik bermaterai/nota toko dan verifikasi tanda tangan pejabat.",
-                                        style = MaterialTheme.typography.bodySmall,
-                                        fontSize = 11.sp
-                                    )
-                                    Spacer(modifier = Modifier.height(8.dp))
-                                    Row(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                                    ) {
-                                        OutlinedButton(
-                                            onClick = {
-                                                hasUploadedPhotoProof = true
-                                                photoProofUri = "content://media/photos/bukti_${System.currentTimeMillis()}.jpg"
-                                            },
-                                            modifier = Modifier.weight(1f)
-                                        ) {
-                                            Icon(Icons.Default.CameraAlt, contentDescription = null, modifier = Modifier.size(16.dp))
-                                            Spacer(modifier = Modifier.width(4.dp))
-                                            Text(if (hasUploadedPhotoProof) "Foto Siap" else "Upload Foto", maxLines = 1)
-                                        }
-                                        OutlinedButton(
-                                            onClick = {
-                                                hasSignedProof = true
-                                            },
-                                            modifier = Modifier.weight(1f)
-                                        ) {
-                                            Icon(Icons.Default.Draw, contentDescription = null, modifier = Modifier.size(16.dp))
-                                            Spacer(modifier = Modifier.width(4.dp))
-                                            Text(if (hasSignedProof) "Ttd Sah" else "Ttd Pejabat", maxLines = 1)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
                     item {
                         Text("Rekening Kas/Bank:", style = MaterialTheme.typography.labelSmall)
                         Row(
@@ -724,50 +664,18 @@ fun TransaksiScreen(
                         }
                     }
 
-                    item {
-                        Text("Approver Berwenang:", style = MaterialTheme.typography.labelSmall)
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            userList.filter { it.pangkat >= 2 }.take(2).forEach { user ->
-                                FilterChip(
-                                    selected = disetujuiOleh1 == user.nama,
-                                    onClick = { disetujuiOleh1 = user.nama },
-                                    label = { Text(user.nama) }
-                                )
-                            }
-                        }
-                    }
-
-                    if (nominal > 100_000_000L) {
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                colors = CardDefaults.cardColors(containerColor = AccentGoldLight)
-                            ) {
-                                Text(
-                                    text = "Wajib Persetujuan Approver 2 (Owner) untuk transaksi > Rp 100 Juta.",
-                                    modifier = Modifier.padding(8.dp),
-                                    style = MaterialTheme.typography.labelSmall,
-                                    color = AccentGold
-                                )
-                            }
-                            OutlinedTextField(
-                                value = disetujuiOleh2.ifBlank { "Drs. H. Surya Abadi" },
-                                onValueChange = { disetujuiOleh2 = it },
-                                label = { Text("Approver 2 (Owner)") },
-                                modifier = Modifier.fillMaxWidth()
-                            )
-                        }
-                    }
                 }
             },
             confirmButton = {
                 Button(
                     onClick = {
-                        if (txType == "KELUAR" && (!hasUploadedPhotoProof || !hasSignedProof)) {
-                            viewModel.userFeedbackMessage.value = "UANG KELUAR WAJIB BUKTI: Harap klik 'Upload Foto' bukti nota dan 'Ttd Pejabat' sebelum posting dana keluar!"
+                        if (nominal <= 0) {
+                            viewModel.userFeedbackMessage.value = "Nominal transaksi harus lebih besar dari Rp 0."
+                            viewModel.isErrorMessage.value = true
+                            return@Button
+                        }
+                        if (txType == "KELUAR" && docRef.isBlank()) {
+                            viewModel.userFeedbackMessage.value = "Transaksi dana keluar wajib memiliki Nomor Dokumen Ref."
                             viewModel.isErrorMessage.value = true
                             return@Button
                         }
@@ -821,7 +729,7 @@ fun TransaksiScreen(
                     modifier = Modifier.testTag("btn_submit_post_transaksi"),
                     colors = ButtonDefaults.buttonColors(containerColor = NavyPrimary)
                 ) {
-                    Text("Validasi & Posting")
+                    Text("Kirim untuk Approval")
                 }
             },
             dismissButton = {
