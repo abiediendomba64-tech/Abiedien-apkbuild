@@ -304,7 +304,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun createReversal(originalTxId: String, reason: String, performedBy: String) {
+    fun createReversal(originalTxId: String, reason: String) {
         viewModelScope.launch {
             try {
                 val remote = cloudTransactionRepository.reverseTransaction(originalTxId, reason)
