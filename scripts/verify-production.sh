@@ -16,7 +16,12 @@ forbidden_patterns=(
 failed=0
 
 for pattern in "${forbidden_patterns[@]}"; do
-  if git grep -n -i -- "$pattern" --     ':!app/src/test/**'     ':!app/src/androidTest/**'     ':!**/build/**'     ':!scripts/verify-production.sh'     ':!.github/workflows/**'; then
+  if git grep -n -i -- "$pattern" -- \
+    ':!app/src/test/**' \
+    ':!app/src/androidTest/**' \
+    ':!**/build/**' \
+    ':!scripts/verify-production.sh' \
+    ':!.github/workflows/**'; then
     echo "::error::Forbidden production pattern found: $pattern"
     failed=1
   fi
