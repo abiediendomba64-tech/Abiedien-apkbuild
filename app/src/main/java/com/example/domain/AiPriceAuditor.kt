@@ -104,7 +104,7 @@ object AiPriceAuditor {
             }
 
             val researchSummary = if (isAlarm) {
-                "Riset AI menemukan nominal yang diajukan (${unitPrice.toRupiah()}/$satuan) melebih batas tertinggi standar pasar ${matched.standardRef} sebesar +${deviationPercent.toInt()}%. Batas wajar pasar berkisar antara ${matched.minFair.toRupiah()} s/d ${matched.maxFair.toRupiah()} per $satuan."
+                "Benchmark harga internal menunjukkan nominal yang diajukan (${unitPrice.toRupiah()}/$satuan) melebih batas tertinggi standar pasar ${matched.standardRef} sebesar +${deviationPercent.toInt()}%. Batas wajar pasar berkisar antara ${matched.minFair.toRupiah()} s/d ${matched.maxFair.toRupiah()} per $satuan."
             } else if (isMarginal) {
                 "Nominal berada sedikit di atas rata-rata pasar (${matched.avgFair.toRupiah()}/$satuan) namun masih mendekati batas toleransi distributor wilayah Ciamis."
             } else {
@@ -138,43 +138,22 @@ object AiPriceAuditor {
             )
         }
 
-        // Heuristic fallback for general property items if keyword not strictly matched
-        val isUnusuallyLarge = when {
-            costCode.startsWith("MKT") && totalNominal > 25_000_000L -> true
-            costCode.startsWith("OVH") && totalNominal > 15_000_000L -> true
-            costCode.startsWith("BLD") && totalNominal > 150_000_000L && safeVol <= 1.0 -> true
-            else -> false
-        }
-
-        val devPercent = if (isUnusuallyLarge) 45.0 else 0.0
-        val isAlarm = isUnusuallyLarge
-        val severity = if (isAlarm) "ALARM_NOMINAL_MARKUP" else "NORMAL_WAJAR"
-        val statusLabel = if (isAlarm) "ALARM NOMINAL! PERIKSA KEMBALI" else "HARGA MASUK AKAL (ACUAN PROYEK)"
-
         return PriceResearchAnalysis(
             itemName = itemName,
             totalNominal = totalNominal,
             volume = safeVol,
             satuan = if (satuanInput.isNotBlank()) satuanInput else "Paket/Lot",
             unitPriceNominal = unitPrice,
-            benchmarkMin = (totalNominal * 0.75).toLong(),
-            benchmarkAvg = (totalNominal * 0.9).toLong(),
-            benchmarkMax = if (isAlarm) (totalNominal * 0.7).toLong() else totalNominal,
-            deviationPercent = devPercent,
-            isAlarmTriggered = isAlarm,
-            alarmSeverity = severity,
-            statusLabel = statusLabel,
-            researchSummary = if (isAlarm) {
-                "Riset AI menandai pengeluaran ini memiliki nilai tunggal yang di luar rata-rata pos $costCode (${totalNominal.toRupiah()}). Perlu rincian sub-komponen belanja fisik."
-            } else {
-                "Nominal rancangan harga ini tergolong proporsional dengan alokasi master budget pos $costCode."
-            },
-            recommendation = if (isAlarm) {
-                "Lakukan review rincian bill of quantity (BOQ) dan verifikasi bukti fisik sebelum otorisasi."
-            } else {
-                "Sesuai dengan plafon anggaran operasional."
-            },
-            referenceStandard = "Audit Anggaran Real Estate SAK EP"
+            benchmarkMin = 0L,
+            benchmarkAvg = 0L,
+            benchmarkMax = 0L,
+            deviationPercent = 0.0,
+            isAlarmTriggered = false,
+            alarmSeverity = "NO_BENCHMARK",
+            statusLabel = "BELUM ADA BENCHMARK",
+            researchSummary = "Belum tersedia benchmark terverifikasi untuk '$itemName'. Sistem tidak membuat benchmark dari nominal input.",
+            recommendation = "Tambahkan benchmark harga internal/resmi yang telah diverifikasi sebelum memakai hasil ini untuk keputusan approval.",
+            referenceStandard = "No verified benchmark"
         )
     }
 }
