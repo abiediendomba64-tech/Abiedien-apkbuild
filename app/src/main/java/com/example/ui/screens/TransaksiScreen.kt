@@ -858,7 +858,7 @@ fun TransaksiScreen(
         )
     }
 
-    // Modal: Impor Spreadsheet (CONTROL)
+    // Modal: Impor Spreadsheet (Supabase)
     if (showImportDialog) {
         AlertDialog(
             onDismissRequest = { showImportDialog = false },
