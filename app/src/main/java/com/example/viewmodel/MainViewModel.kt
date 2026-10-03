@@ -498,23 +498,43 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             try {
                 val list = SpreadsheetParserService.parseTransactionsFromCsv(csvText)
-                if (list.isNotEmpty()) {
-                    list.forEach { tx ->
-                        repository.submitAndPostTransaksi(tx)
-                    }
-                    userFeedbackMessage.value = "Migrasi Data Berhasil: ${list.size} transaksi diimpor ke Buku Kas & Bank!"
-                    isErrorMessage.value = false
-                } else {
+                if (list.isEmpty()) {
                     userFeedbackMessage.value = "Format CSV tidak sesuai atau baris kosong."
                     isErrorMessage.value = true
+                    return@launch
                 }
-            } catch (e: Exception) {
-                userFeedbackMessage.value = "Gagal memproses migrasi data: ${e.message}"
+
+                var imported = 0
+                val failures = mutableListOf<String>()
+
+                for (tx in list) {
+                    try {
+                        cloudTransactionRepository.postTransaction(tx)
+                        imported++
+                    } catch (e: Throwable) {
+                        failures += tx.id + ": " + (e.message ?: "ditolak server")
+                    }
+                }
+
+                refreshCloudState()
+
+                if (failures.isEmpty()) {
+                    userFeedbackMessage.value =
+                        "Import berhasil dikirim ke Supabase: " + imported + " transaksi menunggu approval."
+                    isErrorMessage.value = false
+                } else {
+                    userFeedbackMessage.value =
+                        "Import sebagian: " + imported + " berhasil, " + failures.size +
+                        " ditolak. " + failures.take(2).joinToString(" | ")
+                    isErrorMessage.value = true
+                }
+            } catch (e: Throwable) {
+                userFeedbackMessage.value =
+                    "Gagal memproses import ke Supabase: " + (e.message ?: "unknown error")
                 isErrorMessage.value = true
             }
         }
     }
-
     fun analyzeReceipt(bitmap: Bitmap) {
         val current = aiMessages.value.toMutableList()
         current.add("📷 [Mengunggah Foto Nota / Kwitansi Fisik...]" to true)
