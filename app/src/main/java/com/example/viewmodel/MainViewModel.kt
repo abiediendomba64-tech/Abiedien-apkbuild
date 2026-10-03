@@ -45,6 +45,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val db = AppDatabase.getDatabase(application)
     private val repository = AppRepository(db.appDao())
     private val cloudTransactionRepository = CloudTransactionRepository()
+    private val cloudMasterRepository = CloudMasterRepository()
     private val geminiService = GeminiService()
 
     val currentScreen = MutableStateFlow<Screen>(Screen.Dashboard)
@@ -231,22 +232,44 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun refreshTransactionsFromCloud() {
+    fun refreshCloudState() {
         viewModelScope.launch {
             try {
-                val remote = cloudTransactionRepository.fetchTransactions()
+                val projects = cloudMasterRepository.fetchProjects()
+                val costCodes = cloudMasterRepository.fetchCostCodes()
+                val budgets = cloudMasterRepository.fetchBudgets()
+                val transactions = cloudTransactionRepository.fetchTransactions()
+
+                db.appDao().clearAllProyek()
+                db.appDao().clearAllCostCode()
+                db.appDao().clearAllAnggaran()
                 db.appDao().clearAllTransaksi()
-                if (remote.isNotEmpty()) {
-                    db.appDao().insertTransaksiList(remote)
-                }
-                userFeedbackMessage.value = "Data Buku Kas/Bank diperbarui dari Supabase (" + remote.size + " transaksi)."
+
+                if (projects.isNotEmpty()) db.appDao().insertProyek(projects)
+                if (costCodes.isNotEmpty()) db.appDao().insertCostCode(costCodes)
+                if (budgets.isNotEmpty()) db.appDao().insertAnggaran(budgets)
+                if (transactions.isNotEmpty()) db.appDao().insertTransaksiList(transactions)
+
+                userFeedbackMessage.value =
+                    "Cloud sync selesai: " + projects.size + " proyek, " +
+                    costCodes.size + " cost code, " + budgets.size + " RAB, " +
+                    transactions.size + " transaksi dari Supabase."
                 isErrorMessage.value = false
             } catch (e: Throwable) {
+                db.appDao().clearAllProyek()
+                db.appDao().clearAllCostCode()
+                db.appDao().clearAllAnggaran()
                 db.appDao().clearAllTransaksi()
-                userFeedbackMessage.value = "Gagal memuat Buku Kas/Bank dari Supabase: " + (e.message ?: "unknown error")
+                userFeedbackMessage.value =
+                    "Gagal memuat data authoritative dari Supabase: " +
+                    (e.message ?: "unknown error")
                 isErrorMessage.value = true
             }
         }
+    }
+
+    fun refreshTransactionsFromCloud() {
+        refreshCloudState()
     }
 
     fun submitTransaksi(tx: TransaksiKasBankRecord) {
