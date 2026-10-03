@@ -1,0 +1,6 @@
+{
+  "name": "DevProperti",
+  "description": "Sistem Manajemen Operasional & Pembukuan Keuangan Terpadu Developer Perumahan SAK EP",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

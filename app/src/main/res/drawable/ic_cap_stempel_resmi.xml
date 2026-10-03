@@ -1,0 +1,93 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Outer Arch Ring (Blue Ink) -->
+    <path
+        android:strokeColor="#1E5288"
+        android:strokeWidth="5"
+        android:fillColor="#00000000"
+        android:pathData="M 40,110 A 62,62 0 1,1 160,110" />
+
+    <!-- Inner Arch Ring (Blue Ink) -->
+    <path
+        android:strokeColor="#1E5288"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:pathData="M 48,110 A 54,54 0 1,1 152,110" />
+
+    <!-- Arch Stripes / Sunburst rays (Gold & Blue) -->
+    <path
+        android:strokeColor="#D4A017"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:pathData="M 54,108 A 48,48 0 1,1 146,108" />
+
+    <!-- Stars (3 Top Stars) -->
+    <!-- Center Star -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 100,52 L 102,57 L 107,57 L 103,60 L 105,65 L 100,62 L 95,65 L 97,60 L 93,57 L 98,57 Z" />
+    <!-- Left Star -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 88,55 L 90,60 L 95,60 L 91,63 L 93,68 L 88,65 L 83,68 L 85,63 L 81,60 L 86,60 Z" />
+    <!-- Right Star -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 112,55 L 114,60 L 119,60 L 115,63 L 117,68 L 112,65 L 107,68 L 109,63 L 105,60 L 110,60 Z" />
+
+    <!-- Rooster Crest & Head (Blue & Gold) -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 115,68 C 117,65 120,64 122,66 C 124,68 123,71 120,73 C 123,73 125,76 123,78 C 121,80 118,80 116,81 Z" />
+    <path
+        android:fillColor="#D4A017"
+        android:pathData="M 114,75 C 118,75 121,79 119,84 L 126,82 L 118,87 C 116,92 110,95 106,93 Z" />
+
+    <!-- Rooster Wing Feathers (Wing Spread Gold & Blue) -->
+    <path
+        android:fillColor="#D4A017"
+        android:pathData="M 76,68 C 82,75 88,85 88,96 C 82,92 78,82 76,68 Z" />
+    <path
+        android:fillColor="#D4A017"
+        android:pathData="M 82,75 C 90,82 94,92 94,102 C 87,98 84,88 82,75 Z" />
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 88,84 C 98,90 102,100 100,108 C 93,105 91,95 88,84 Z" />
+    <!-- Rooster Body (Deep Blue) -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 100,92 C 108,92 118,97 116,108 C 110,112 95,112 90,105 C 88,100 94,92 100,92 Z" />
+
+    <!-- Main Ribbon Box: UNGGAS (GM) -->
+    <path
+        android:fillColor="#1E5288"
+        android:pathData="M 50,106 H 150 C 154,106 156,108 156,112 V 128 C 156,132 154,134 150,134 H 50 C 46,134 44,132 44,128 V 112 C 44,108 46,106 50,106 Z" />
+    <!-- Ribbon Inner Frame -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M 52,108 H 148 C 151,108 153,110 153,114 V 126 C 153,130 151,132 148,132 H 52 C 49,132 47,130 47,126 V 114 C 47,110 49,108 52,108 Z" />
+
+    <!-- Lower Gold Banner: HALAL & TERJAGA -->
+    <path
+        android:fillColor="#D4A017"
+        android:pathData="M 64,134 L 56,146 L 70,143 L 100,150 L 130,143 L 144,146 L 136,134 Z" />
+    <path
+        android:strokeColor="#1E5288"
+        android:strokeWidth="1.5"
+        android:fillColor="#00000000"
+        android:pathData="M 64,134 L 56,146 L 70,143 L 100,150 L 130,143 L 144,146 L 136,134 Z" />
+
+    <!-- Circular Seal Border Ring for Official Stamp -->
+    <path
+        android:strokeColor="#1E5288"
+        android:strokeWidth="2.5"
+        android:fillColor="#00000000"
+        android:pathData="M 100,24 A 78,78 0 1,0 100,180 A 78,78 0 1,0 100,24" />
+
+</vector>

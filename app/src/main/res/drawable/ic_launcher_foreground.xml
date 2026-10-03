@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Main Center Tower / High-Rise -->
+    <path
+        android:fillColor="#E2E8F0"
+        android:pathData="M46,30 L62,30 L62,76 L46,76 Z" />
+    <path
+        android:fillColor="#CBD5E1"
+        android:pathData="M54,30 L62,30 L62,76 L54,76 Z" />
+    <!-- Tower Windows -->
+    <path
+        android:fillColor="#1E293B"
+        android:pathData="M49,36 L52,36 L52,40 L49,40 Z M56,36 L59,36 L59,40 L56,40 Z M49,44 L52,44 L52,48 L49,48 Z M56,44 L59,44 L59,48 L56,48 Z M49,52 L52,52 L52,56 L49,56 Z M56,52 L59,52 L59,56 L56,56 Z M49,60 L52,60 L52,64 L49,64 Z M56,60 L59,60 L59,64 L56,64 Z" />
+
+    <!-- Left Property House Silhouette with Roof -->
+    <path
+        android:fillColor="#F8FAFC"
+        android:pathData="M26,52 L39,40 L46,46 L46,76 L26,76 Z" />
+    <!-- House Roof overhang -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M23,53 L39,38 L48,46 L46,48 L39,41 L25,55 Z" />
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M31,56 L39,56 L39,64 L31,64 Z" />
+    <path
+        android:fillColor="#0284C7"
+        android:pathData="M35,56 L39,56 L39,64 L35,64 Z" />
+
+    <!-- Right Modern Building Wing with Roofline -->
+    <path
+        android:fillColor="#F1F5F9"
+        android:pathData="M62,46 L70,39 L83,50 L83,76 L62,76 Z" />
+    <path
+        android:fillColor="#FBBF24"
+        android:pathData="M60,47 L70,37 L85,50 L83,52 L70,40 L62,49 Z" />
+    <path
+        android:fillColor="#38BDF8"
+        android:pathData="M69,56 L77,56 L77,64 L69,64 Z" />
+
+    <!-- Foundation Ground Line (Solid base) -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M22,76 L86,76 L86,79 L22,79 Z" />
+
+    <!-- Financial / Golden Growth Badge at lower center -->
+    <path
+        android:fillColor="#F59E0B"
+        android:pathData="M54,66 L62,72 L54,78 L46,72 Z" />
+    <path
+        android:fillColor="#FEF08A"
+        android:pathData="M54,68 L60,72 L54,76 L48,72 Z" />
+</vector>

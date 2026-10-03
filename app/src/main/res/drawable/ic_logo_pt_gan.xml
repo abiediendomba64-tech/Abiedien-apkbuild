@@ -1,0 +1,72 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+
+    <!-- Outer Hexagonal Frame (Silver/Steel Metallic) -->
+    <path
+        android:strokeColor="#78909C"
+        android:strokeWidth="5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M 100,10 L 175,52 L 175,138 L 100,180 L 25,138 L 25,52 Z" />
+
+    <!-- Inner Hexagonal Accent Line -->
+    <path
+        android:strokeColor="#B0BEC5"
+        android:strokeWidth="2.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M 100,20 L 165,58 L 165,132 L 100,170 L 35,132 L 35,58 Z" />
+
+    <!-- Center Building Left Tower -->
+    <path
+        android:fillColor="#37474F"
+        android:pathData="M 72,55 L 96,50 L 96,115 L 72,115 Z" />
+
+    <!-- Center Building Right Tower -->
+    <path
+        android:fillColor="#455A64"
+        android:pathData="M 104,50 L 128,55 L 128,115 L 104,115 Z" />
+
+    <!-- Left Tower Windows (White / Light) -->
+    <path
+        android:fillColor="#ECEFF1"
+        android:pathData="M 76,62 H 92 V 68 H 76 Z M 76,74 H 92 V 80 H 76 Z M 76,86 H 92 V 92 H 76 Z M 76,98 H 92 V 110 H 76 Z" />
+
+    <!-- Right Tower Windows (White / Light) -->
+    <path
+        android:fillColor="#ECEFF1"
+        android:pathData="M 108,62 H 124 V 68 H 108 Z M 108,74 H 124 V 80 H 108 Z M 108,86 H 124 V 92 H 108 Z M 108,98 H 124 V 110 H 108 Z" />
+
+    <!-- Building Base Plinth -->
+    <path
+        android:fillColor="#263238"
+        android:pathData="M 64,115 L 136,115 L 132,120 L 68,120 Z" />
+
+    <!-- Left Sound Wave Bars (Orange & Steel) -->
+    <path
+        android:fillColor="#FF6D00"
+        android:pathData="M 28,95 L 32,95 L 32,97 L 28,97 Z M 36,92 L 40,92 L 40,100 L 36,100 Z M 44,89 L 48,89 L 48,103 L 44,103 Z M 52,86 L 56,86 L 56,106 L 52,106 Z M 60,82 L 64,82 L 64,110 L 60,110 Z" />
+
+    <!-- Right Sound Wave Bars (Orange & Steel) -->
+    <path
+        android:fillColor="#FF6D00"
+        android:pathData="M 172,95 L 168,95 L 168,97 L 172,97 Z M 164,92 L 160,92 L 160,100 L 164,100 Z M 156,89 L 152,89 L 152,103 L 156,103 Z M 148,86 L 144,86 L 144,106 L 148,106 Z M 140,82 L 136,82 L 136,110 L 140,110 Z" />
+
+    <!-- Underline Bar Above Text -->
+    <path
+        android:strokeColor="#FF6D00"
+        android:strokeWidth="2.5"
+        android:pathData="M 30,126 L 170,126" />
+
+    <!-- Bottom Chevron Wing Accent -->
+    <path
+        android:strokeColor="#90A4AE"
+        android:strokeWidth="3.5"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M 65,155 L 100,175 L 135,155" />
+
+</vector>
