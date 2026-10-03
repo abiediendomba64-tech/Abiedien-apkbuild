@@ -26,7 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.data.SupabaseClientProvider
 import com.example.ui.screens.*
 import com.example.ui.theme.*
@@ -46,8 +48,20 @@ class DashboardActivity : ComponentActivity() {
             return
         }
         lifecycleScope.launch {
-            viewModel.refreshTransactionsFromCloud()
+            viewModel.refreshCloudState()
         }
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                SupabaseClientProvider.client.auth.sessionStatus.collect { status ->
+                    if (status is io.github.jan.supabase.auth.status.SessionStatus.NotAuthenticated) {
+                        startActivity(Intent(this@DashboardActivity, MainActivity::class.java))
+                        finish()
+                    }
+                }
+            }
+        }
+
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
