@@ -106,6 +106,9 @@ interface AppDao {
     fun getPostedTransaksi(): Flow<List<TransaksiKasBankRecord>>
 
     @Query("SELECT * FROM transaksi_kas_bank WHERE id = :id LIMIT 1")
+    @Query("DELETE FROM transaksi_kas_bank")
+    suspend fun clearAllTransaksi()
+
     suspend fun getTransaksiById(id: String): TransaksiKasBankRecord?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
