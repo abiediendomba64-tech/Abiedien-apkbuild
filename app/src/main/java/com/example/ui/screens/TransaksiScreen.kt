@@ -773,7 +773,7 @@ fun TransaksiScreen(
             confirmButton = {
                 Button(
                     onClick = {
-                        viewModel.createReversal(target.id, reversalReason.ifBlank { "Koreksi posting" }, "Operator")
+                        viewModel.createReversal(target.id, reversalReason.ifBlank { "Koreksi posting" })
                         showReversalDialog = false
                         selectedTxForReversal = null
                     },
