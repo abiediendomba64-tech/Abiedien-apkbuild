@@ -138,7 +138,7 @@ fun AiAdvisorScreen(
                                         color = Color.White
                                     )
                                     Text(
-                                        text = "Audit otomatis kewajaran harga rancangan belanja properti berbasis SNI & PUPR 2026.",
+                                        text = "Audit kewajaran harga menggunakan benchmark yang tersimpan. Verifikasi sumber benchmark sebelum approval.",
                                         style = MaterialTheme.typography.bodySmall,
                                         color = Color.White.copy(alpha = 0.8f),
                                         fontSize = 11.sp
