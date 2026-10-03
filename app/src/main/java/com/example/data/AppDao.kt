@@ -24,6 +24,9 @@ interface AppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertProyek(proyekList: List<MasterProyek>)
 
+    @Query("DELETE FROM master_proyek")
+    suspend fun clearAllProyek()
+
     // Master Lahan
     @Query("SELECT * FROM master_lahan")
     fun getAllLahan(): Flow<List<MasterLahan>>
@@ -78,6 +81,9 @@ interface AppDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCostCode(costCodeList: List<MasterCostCode>)
 
+    @Query("DELETE FROM master_cost_code")
+    suspend fun clearAllCostCode()
+
     // Anggaran Proyek
     @Query("SELECT * FROM anggaran_proyek")
     fun getAllAnggaran(): Flow<List<AnggaranProyek>>
@@ -87,6 +93,9 @@ interface AppDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAnggaran(anggaranList: List<AnggaranProyek>)
+
+    @Query("DELETE FROM anggaran_proyek")
+    suspend fun clearAllAnggaran()
 
     @Update
     suspend fun updateAnggaran(anggaran: AnggaranProyek)
