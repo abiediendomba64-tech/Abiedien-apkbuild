@@ -93,14 +93,8 @@ class GeminiService {
     suspend fun analyzeReceipt(bitmap: Bitmap): Result<String> = withContext(Dispatchers.IO) {
         try {
             if (apiKey.isBlank() || apiKey == "MY_GEMINI_API_KEY") {
-                return@withContext Result.success(
-                    "Simulasi Analisis Kwitansi / Nota:\n" +
-                    "- Tanggal Terdeteksi: 2026-10-02\n" +
-                    "- Pihak / Toko: Toko Material Bangunan Setia\n" +
-                    "- Perkiraan Nilai: Rp 4.500.000\n" +
-                    "- Rekomendasi Cost Code: BLD-002 (Dinding, Plester & Atap)\n" +
-                    "- Rekomendasi Akun: 1410 (WIP Konstruksi Bangunan Dalam Proses)\n" +
-                    "- Status Fisik: Sah (terdapat stempel toko & tanda tangan penerima)."
+                return@withContext Result.failure(
+                    IllegalStateException("Analisis dokumen membutuhkan Gemini API key yang aktif.")
                 )
             }
 
