@@ -27,6 +27,6 @@ class AuthRepository {
                     eq("active", true)
                 }
             }
-            .decodeSingleOrNull<ProfileDto>()
+            .decodeList<ProfileDto>().firstOrNull()
     }
 }
