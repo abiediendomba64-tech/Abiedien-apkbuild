@@ -45,6 +45,9 @@ class DashboardActivity : ComponentActivity() {
             finish()
             return
         }
+        lifecycleScope.launch {
+            viewModel.refreshTransactionsFromCloud()
+        }
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
