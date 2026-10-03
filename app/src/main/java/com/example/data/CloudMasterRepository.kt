@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class CloudProjectDto(
     val id: String,
     val name: String,
-    @SerialName("entity_name") val entityName: String,
+    @SerialName("entity_id") val entityId: String,
     @SerialName("unit_count") val unitCount: Int,
     @SerialName("total_budget") val totalBudget: Long,
     val location: String,
@@ -46,7 +46,7 @@ class CloudMasterRepository {
                 MasterProyek(
                     id = it.id,
                     nama = it.name,
-                    entityId = it.entityName,
+                    entityId = it.entityId,
                     unitCount = it.unitCount,
                     totalBudget = it.totalBudget,
                     lokasi = it.location,
